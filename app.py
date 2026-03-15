@@ -1,5 +1,4 @@
 import csv
-import io
 import os
 import requests
 from flask import Flask, jsonify
@@ -9,8 +8,8 @@ app = Flask(__name__)
 
 RIPTA_URL = 'http://realtime.ripta.com:81/api/tripupdates?format=json'
 
-# Lookup table: trip_id -> minutes from trip start_time to arrival at stop 20535
-STOP_OFFSET_MINUTES = {
+# Lookup table: trip_id -> minutes from trip start_time to arrival at stop 20535 (Route 11)
+STOP_OFFSET_RT11 = {
     '4422603': 13, '4422604': 13, '4422605': 13, '4422606': 12, '4422607': 12,
     '4422608': 12, '4422609': 13, '4422610': 13, '4422611': 13, '4422612': 13,
     '4422613': 13, '4422614': 13, '4422615': 13, '4422616': 13, '4422617': 13,
@@ -52,21 +51,57 @@ STOP_OFFSET_MINUTES = {
     '4574110': 21,
 }
 
-# Load scheduled stop times from CSV file bundled with this app
-SCHEDULE = []  # list of (arrival_minutes, headsign)
+# Lookup table: trip_id -> minutes from trip start_time to arrival at stop 20280 (Route 1)
+STOP_OFFSET_RT1 = {
+    '4422942': 8, '4422948': 8, '4422949': 9, '4422958': 9, '4422966': 20,
+    '4422967': 20, '4422973': 9, '4422978': 20, '4422979': 20, '4422980': 20,
+    '4422984': 20, '4422986': 9, '4422994': 20, '4422995': 9, '4423000': 20,
+    '4423003': 9, '4423008': 20, '4423012': 9, '4423018': 20, '4423021': 8,
+    '4423026': 20, '4564033': 9, '4564037': 9, '4564043': 9, '4564047': 9,
+    '4564050': 21, '4564059': 9, '4564060': 9, '4564061': 9, '4564065': 21,
+    '4564069': 21, '4564071': 21, '4564073': 21, '4564075': 22, '4564077': 22,
+    '4564084': 9, '4564085': 9, '4564086': 9, '4564090': 22, '4564095': 22,
+    '4564096': 9, '4564098': 21, '4564103': 21, '4571255': 24, '4571257': 23,
+    '4571259': 23, '4571261': 24, '4571263': 21, '4571542': 0, '4571662': 0,
+    '4572089': 24, '4572091': 23, '4572093': 23, '4572095': 24, '4572097': 22,
+    '4572311': 24, '4572313': 23, '4572315': 23, '4572317': 24, '4572393': 21,
+    '4572796': 10, '4572802': 10, '4572808': 10, '4572814': 10, '4572820': 10,
+    '4572826': 9, '4572832': 9, '4573103': 22, '4573105': 23, '4573107': 23,
+    '4573109': 24, '4573111': 24, '4573747': 10, '4573753': 10, '4573759': 10,
+    '4573765': 10, '4573771': 9, '4573777': 9, '4573779': 9, '4573786': 10,
+    '4573792': 10, '4573798': 10, '4573804': 10, '4573810': 9, '4573816': 9,
+    '4573818': 9, '4573822': 10, '4573828': 10, '4573834': 10, '4573840': 10,
+    '4573846': 9, '4573852': 9,
+}
+
+# Schedules loaded at startup
+SCHEDULE_RT11 = []
+SCHEDULE_RT1 = []
+
 
 def load_schedule():
-    global SCHEDULE
-    csv_path = os.path.join(os.getcwd(), 'route11_stop20535.csv')
-    with open(csv_path) as f:
+    global SCHEDULE_RT11, SCHEDULE_RT1
+    base = os.getcwd()
+
+    csv11 = os.path.join(base, 'route11_stop20535.csv')
+    with open(csv11) as f:
         reader = csv.DictReader(f)
         for row in reader:
-            SCHEDULE.append((time_str_to_minutes(row['arrival_time']), row['headsign']))
-    SCHEDULE.sort(key=lambda x: x[0])
+            SCHEDULE_RT11.append((time_str_to_minutes(row['arrival_time']), row['headsign']))
+    SCHEDULE_RT11.sort(key=lambda x: x[0])
+
+    csv1 = os.path.join(base, 'route1_stop20280.csv')
+    with open(csv1) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            SCHEDULE_RT1.append((time_str_to_minutes(row['arrival_time']), row['headsign']))
+    SCHEDULE_RT1.sort(key=lambda x: x[0])
+
 
 def time_str_to_minutes(t):
     parts = t.split(':')
     return int(parts[0]) * 60 + int(parts[1])
+
 
 def now_minutes():
     now = datetime.now(timezone.utc)
@@ -74,6 +109,7 @@ def now_minutes():
     if eastern_minutes < 0:
         eastern_minutes += 24 * 60
     return eastern_minutes
+
 
 def shorten_destination(dest):
     dest = dest.upper().strip()
@@ -95,10 +131,66 @@ def shorten_destination(dest):
         dest = dest.replace(long, short)
     return dest
 
+
+def get_live_results(offset_table, route_label, current_minutes, feed):
+    results = []
+    for entity in feed.get('entity', []):
+        trip_update = entity.get('trip_update')
+        if not trip_update:
+            continue
+        trip = trip_update.get('trip', {})
+        trip_id = str(trip.get('trip_id', ''))
+        if trip_id not in offset_table:
+            continue
+        start_time_str = trip.get('start_time', '')
+        if not start_time_str:
+            continue
+        start_minutes = time_str_to_minutes(start_time_str)
+        offset = offset_table[trip_id]
+        delay_seconds = 0
+        updates = trip_update.get('stop_time_update', [])
+        if updates:
+            last = updates[-1]
+            arrival = last.get('arrival') or last.get('departure')
+            if arrival:
+                delay_seconds = arrival.get('delay', 0)
+        delay_minutes = delay_seconds // 60
+        estimated_arrival = start_minutes + offset + delay_minutes
+        minutes_away = estimated_arrival - current_minutes
+        if minutes_away < 0:
+            continue
+        results.append({
+            'route': route_label,
+            'destination': route_label + ' PVD',
+            'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
+            'live': True,
+        })
+    results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+    return results
+
+
+def get_scheduled_results(schedule, route_label, current_minutes, count=1):
+    results = []
+    for arrival_minutes, headsign in schedule:
+        minutes_away = arrival_minutes - current_minutes
+        if minutes_away < 0:
+            continue
+        results.append({
+            'route': route_label,
+            'destination': route_label + ' ' + shorten_destination(headsign),
+            'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
+            'live': False,
+        })
+        if len(results) == count:
+            break
+    return results
+
+
 @app.route('/')
 @app.route('/ping')
 def ping():
     return 'ok', 200
+
 
 @app.route('/debug')
 def debug():
@@ -108,97 +200,59 @@ def debug():
         return jsonify({'error': str(e)}), 502
 
     current_minutes = now_minutes()
-    route_11_trips = []
-
+    trips = []
     for entity in data.get('entity', []):
         trip_update = entity.get('trip_update')
         if not trip_update:
             continue
         trip = trip_update.get('trip', {})
-        if str(trip.get('route_id', '')) != '11':
+        route = str(trip.get('route_id', ''))
+        if route not in ('1', '11'):
             continue
         trip_id = str(trip.get('trip_id', ''))
-        route_11_trips.append({
+        in_lookup = trip_id in STOP_OFFSET_RT11 or trip_id in STOP_OFFSET_RT1
+        trips.append({
+            'route_id': route,
             'trip_id': trip_id,
             'start_time': trip.get('start_time'),
-            'in_lookup': trip_id in STOP_OFFSET_MINUTES,
+            'in_lookup': in_lookup,
         })
 
     return jsonify({
         'current_minutes_since_midnight': current_minutes,
-        'route_11_trips_in_feed': route_11_trips,
+        'trips_in_feed': trips,
     })
 
 
-@app.route('/stop/20535')
-def stop_20535():
+@app.route('/board')
+def board():
     current_minutes = now_minutes()
-    results = []
+    rt11_results = []
+    rt1_results = []
 
-    # --- Try live GPS data first ---
+    # Fetch live feed once and use for both routes
     try:
-        data = requests.get(RIPTA_URL, timeout=10).json()
-
-        for entity in data.get('entity', []):
-            trip_update = entity.get('trip_update')
-            if not trip_update:
-                continue
-
-            trip = trip_update.get('trip', {})
-            trip_id = str(trip.get('trip_id', ''))
-
-            if trip_id not in STOP_OFFSET_MINUTES:
-                continue
-
-            start_time_str = trip.get('start_time', '')
-            if not start_time_str:
-                continue
-
-            start_minutes = time_str_to_minutes(start_time_str)
-            offset = STOP_OFFSET_MINUTES[trip_id]
-
-            delay_seconds = 0
-            updates = trip_update.get('stop_time_update', [])
-            if updates:
-                last = updates[-1]
-                arrival = last.get('arrival') or last.get('departure')
-                if arrival:
-                    delay_seconds = arrival.get('delay', 0)
-
-            delay_minutes = delay_seconds // 60
-            estimated_arrival = start_minutes + offset + delay_minutes
-            minutes_away = estimated_arrival - current_minutes
-
-            if minutes_away < 0:
-                continue
-
-            results.append({
-                'destination': 'R PVD',
-                'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
-                'live': True,
-            })
-
-        results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
-
+        feed = requests.get(RIPTA_URL, timeout=10).json()
+        rt11_results = get_live_results(STOP_OFFSET_RT11, '11', current_minutes, feed)
+        rt1_results = get_live_results(STOP_OFFSET_RT1, '1', current_minutes, feed)
     except Exception:
-        pass  # Fall through to schedule if live feed fails
+        pass
 
-    # --- Fall back to schedule if no live results ---
-    if not results:
-        for arrival_minutes, headsign in SCHEDULE:
-            minutes_away = arrival_minutes - current_minutes
-            # Handle overnight wrap (e.g. schedule has 25:30 style times)
-            if minutes_away < 0:
-                continue
-            results.append({
-                'destination': 'R ' + shorten_destination(headsign),
-                'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
-                'live': False,
-            })
-            if len(results) == 3:
-                break
+    # Fall back to schedule for each route if no live results
+    if not rt11_results:
+        rt11_results = get_scheduled_results(SCHEDULE_RT11, '11', current_minutes, count=1)
+    if not rt1_results:
+        rt1_results = get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=1)
 
-    return jsonify(results[:3])
+    # Return one result per route, sorted by soonest arrival
+    results = []
+    if rt11_results:
+        results.append(rt11_results[0])
+    if rt1_results:
+        results.append(rt1_results[0])
+    results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+
+    return jsonify(results)
 
 
 if __name__ == '__main__':
@@ -208,7 +262,7 @@ if __name__ == '__main__':
 
 try:
     load_schedule()
-    print('Schedule loaded:', len(SCHEDULE), 'entries')
+    print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'entries, RT1', len(SCHEDULE_RT1), 'entries')
 except Exception as e:
     print('Warning: could not load schedule:', e)
     print('CWD:', os.getcwd())
