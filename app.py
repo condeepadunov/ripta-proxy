@@ -206,4 +206,7 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
 
 
-load_schedule()
+try:
+    load_schedule()
+except Exception as e:
+    print('Warning: could not load schedule:', e)
