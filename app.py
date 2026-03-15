@@ -258,30 +258,22 @@ def debug():
 @app.route('/board')
 def board():
     current_minutes = now_minutes()
-    rt11_results = []
-    rt1_results = []
+    all_results = []
 
     try:
         feed = requests.get(RIPTA_URL, timeout=10).json()
-        rt11_results = get_live_results(STOP_OFFSET_RT11, 'R', current_minutes, feed)
-        rt1_results = get_live_results(STOP_OFFSET_RT1, '1', current_minutes, feed)
+        all_results += get_live_results(STOP_OFFSET_RT11, 'R', current_minutes, feed)
+        all_results += get_live_results(STOP_OFFSET_RT1, '1', current_minutes, feed)
     except Exception:
         pass
 
-    if not rt11_results:
-        rt11_results = get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=1)
-    if not rt1_results:
-        rt1_results = get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=1)
+    if not any(r['route'] == 'R' for r in all_results):
+        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=2)
+    if not any(r['route'] == '1' for r in all_results):
+        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2)
 
-    results = []
-    if rt11_results:
-        results.append(rt11_results[0])
-    if rt1_results:
-        results.append(rt1_results[0])
-    results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
-
-    return jsonify(results)
-
+    all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+    return jsonify(all_results[:2])
 
 if __name__ == '__main__':
     load_schedule()
