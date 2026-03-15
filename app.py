@@ -109,7 +109,7 @@ def load_schedule():
                 row['service_id'],
             ))
     SCHEDULE_RT1.sort(key=lambda x: x[0])
-with open(os.path.join(base, 'route11_stop20535.csv')) as f:
+    with open(os.path.join(base, 'route11_stop20535.csv')) as f:
         reader = csv.DictReader(f)
         for row in reader:
             TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
