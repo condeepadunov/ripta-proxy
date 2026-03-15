@@ -267,14 +267,18 @@ def board():
     except Exception:
         pass
 
-    if not any(r['route'] == 'R' for r in all_results):
-        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=2)
-    if not any(r['route'] == '1' for r in all_results):
-        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2)
+    # Fill remaining slots with scheduled buses for each route
+    live_r_count = sum(1 for r in all_results if r['route'] == 'R')
+    live_1_count = sum(1 for r in all_results if r['route'] == '1')
+
+    if live_r_count < 2:
+        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=2 - live_r_count)
+    if live_1_count < 2:
+        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2 - live_1_count)
 
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return jsonify(all_results[:2])
-
+    
 if __name__ == '__main__':
     load_schedule()
     app.run(host='0.0.0.0', port=10000)
