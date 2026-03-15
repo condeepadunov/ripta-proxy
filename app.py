@@ -126,10 +126,8 @@ def shorten_destination(dest):
         ('SOUTH ', 'S '),
         ('EAST ', 'E '),
         ('WEST ', 'W '),
-        ('T.F. GREEN INTERNATIONAL AIRPORT', 'TFG'),
-        ('TF GREEN INTERNATIONAL AIRPORT', 'TFG'),
-        ("SHAW'S / WARWICK AVE", 'SWW'),
-        ('SHAWS / WARWICK AVE', 'SWW'),
+        ('TF GREEN AIRPORT VIA WARWICK AVE', 'TFG'),
+        ("SHAW'S (WARWICK)", 'SWW'),
     ]
     for long, short in replacements:
         dest = dest.replace(long, short)
