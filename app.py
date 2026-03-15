@@ -301,7 +301,7 @@ def board():
 
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
-    return jsonify(all_results[:2])
+    return jsonify(all_results[:3])
     
 if __name__ == '__main__':
     load_schedule()
