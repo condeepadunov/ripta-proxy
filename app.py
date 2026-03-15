@@ -140,7 +140,7 @@ def shorten_destination(dest):
     
     # Special cases that preserve mixed case
     if 'BROAD STREET TERMINAL' in dest_upper or 'BROAD ST' in dest_upper:
-        return 'Brd St'
+        return 'BrdSt'
     if 'TF GREEN AIRPORT' in dest_upper:
         return 'TFGrn'
     if "SHAW'S" in dest_upper:
