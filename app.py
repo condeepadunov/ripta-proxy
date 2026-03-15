@@ -184,8 +184,6 @@ def stop_20535():
         for arrival_minutes, headsign in SCHEDULE:
             minutes_away = arrival_minutes - current_minutes
             # Handle overnight wrap (e.g. schedule has 25:30 style times)
-            if minutes_away < -60:
-                minutes_away += 24 * 60
             if minutes_away < 0:
                 continue
             results.append({
