@@ -95,6 +95,7 @@ def shorten_destination(dest):
         dest = dest.replace(long, short)
     return dest
 
+@app.route('/')
 @app.route('/ping')
 def ping():
     return 'ok', 200
