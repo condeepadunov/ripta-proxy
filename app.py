@@ -57,7 +57,7 @@ SCHEDULE = []  # list of (arrival_minutes, headsign)
 
 def load_schedule():
     global SCHEDULE
-    csv_path = os.path.join(os.path.dirname(__file__), 'route11_stop20535.csv')
+    csv_path = os.path.join(os.getcwd(), 'route11_stop20535.csv')
     with open(csv_path) as f:
         reader = csv.DictReader(f)
         for row in reader:
