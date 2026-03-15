@@ -208,5 +208,8 @@ if __name__ == '__main__':
 
 try:
     load_schedule()
+    print('Schedule loaded:', len(SCHEDULE), 'entries')
 except Exception as e:
     print('Warning: could not load schedule:', e)
+    print('CWD:', os.getcwd())
+    print('Files here:', os.listdir(os.getcwd()))
