@@ -126,6 +126,10 @@ def shorten_destination(dest):
         ('SOUTH ', 'S '),
         ('EAST ', 'E '),
         ('WEST ', 'W '),
+        ('T.F. GREEN INTERNATIONAL AIRPORT', 'TFG'),
+        ('TF GREEN INTERNATIONAL AIRPORT', 'TFG'),
+        ("SHAW'S / WARWICK AVE", 'SWW'),
+        ('SHAWS / WARWICK AVE', 'SWW'),
     ]
     for long, short in replacements:
         dest = dest.replace(long, short)
@@ -233,14 +237,14 @@ def board():
     # Fetch live feed once and use for both routes
     try:
         feed = requests.get(RIPTA_URL, timeout=10).json()
-        rt11_results = get_live_results(STOP_OFFSET_RT11, '11', current_minutes, feed)
+        rt11_results = get_live_results(STOP_OFFSET_RT11, 'R', current_minutes, feed)
         rt1_results = get_live_results(STOP_OFFSET_RT1, '1', current_minutes, feed)
     except Exception:
         pass
 
     # Fall back to schedule for each route if no live results
     if not rt11_results:
-        rt11_results = get_scheduled_results(SCHEDULE_RT11, '11', current_minutes, count=1)
+        rt11_results = get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=1)
     if not rt1_results:
         rt1_results = get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=1)
 
