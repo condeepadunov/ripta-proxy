@@ -1,0 +1,93 @@
+trip_id,arrival_time,headsign,service_id
+4573818,05:58:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572393,06:17:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4573779,06:38:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4573103,06:56:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4564050,07:01:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4423026,07:06:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4571662,07:08:00,Kennedy Plaza then Central/Classical HS,hjan2601-Weekday-17-JA2026-1111100
+4572796,07:15:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572089,07:34:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4564043,07:41:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4423021,07:42:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573822,07:55:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4571255,08:14:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4564065,08:24:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4423018,08:26:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4573786,08:35:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572311,08:54:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4564033,09:06:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4423012,09:07:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573747,09:14:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4573105,09:34:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4423008,09:43:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4564103,09:50:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572802,09:54:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572091,10:14:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4423003,10:27:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4564059,10:32:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4573828,10:34:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4571257,10:54:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4423000,11:06:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4564098,11:14:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4573792,11:14:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572313,11:34:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422995,11:45:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573753,11:54:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564096,11:57:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4573107,12:14:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422994,12:26:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4572808,12:34:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564095,12:38:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572093,12:54:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422986,13:07:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573834,13:14:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564060,13:21:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4571259,13:34:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422984,13:43:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4573798,13:54:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564090,14:02:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572315,14:14:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422973,14:27:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573759,14:34:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564084,14:45:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4573109,14:53:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4571542,14:57:00,Hope & Chace,hjan2601-Weekday-17-JA2026-1111100
+4422978,15:05:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4572814,15:13:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564077,15:25:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572095,15:33:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422958,15:46:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573840,15:53:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564037,16:08:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4571261,16:13:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422967,16:25:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4573804,16:33:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564075,16:49:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572317,16:53:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422949,17:06:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573765,17:13:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564085,17:31:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4573111,17:33:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422979,17:45:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4572820,17:54:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564073,18:15:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4572097,18:16:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4422942,18:25:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573846,18:36:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4571263,18:57:00,Shaw's (Warwick),hjan2601-Weekday-17-JA2026-1111100
+4564061,18:58:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4422966,19:06:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4573810,19:17:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564071,19:40:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4422948,19:42:00,TF Green Airport via Warwick Ave,hjap2607-Sunday-1-JA2026-0000001
+4573771,19:57:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564086,20:21:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4422980,20:26:00,Shaw's (Warwick),hjap2607-Sunday-1-JA2026-0000001
+4572826,20:37:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564069,21:04:00,Shaw's (Warwick),hjan2606-Saturday-95-JA2026-0000010
+4573852,21:17:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4564047,21:45:00,TF Green Airport via Warwick Ave,hjan2606-Saturday-95-JA2026-0000010
+4573816,21:57:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4573777,22:37:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
+4572832,23:17:00,TF Green Airport via Warwick Ave,hjan2601-Weekday-17-JA2026-1111100
