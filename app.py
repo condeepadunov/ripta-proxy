@@ -135,11 +135,20 @@ def active_service_ids():
 
 
 def shorten_destination(dest):
-    dest = dest.upper().strip()
+    dest = dest.strip()
+    dest_upper = dest.upper()
+    
+    # Special cases that preserve mixed case
+    if 'BROAD STREET TERMINAL' in dest_upper or 'BROAD ST' in dest_upper:
+        return 'Broad St'
+    if 'TF GREEN AIRPORT' in dest_upper:
+        return 'TFG'
+    if "SHAW'S" in dest_upper:
+        return 'SWW'
+    
+    # General uppercase replacements for everything else
+    dest = dest_upper
     replacements = [
-        ('TF GREEN AIRPORT VIA WARWICK AVE', 'TFG'),
-        ("SHAW'S (WARWICK)", 'SWW'),
-        ('BROAD STREET TERMINAL (PROVIDENCE)', 'PVD'),
         ('PROVIDENCE', 'PVD'),
         ('KENNEDY PLAZA', 'KP'),
         ('PAWTUCKET', 'PWT'),
