@@ -261,9 +261,7 @@ if __name__ == '__main__':
     load_schedule()
     app.run(host='0.0.0.0', port=10000)
 
-
-@app.before_first_request
-def startup():
+with app.app_context():
     try:
         load_schedule()
         print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'entries, RT1', len(SCHEDULE_RT1), 'entries')
