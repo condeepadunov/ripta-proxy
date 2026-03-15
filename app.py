@@ -254,6 +254,23 @@ def debug():
         'trips_in_feed': trips,
     })
 
+def deduplicate_results(results):
+    live = [r for r in results if r['live']]
+    scheduled = [r for r in results if not r['live']]
+    
+    filtered_scheduled = []
+    for s in scheduled:
+        s_min = int(s['arrival']) if s['arrival'] != 'BRD' else 0
+        too_close = False
+        for l in live:
+            l_min = int(l['arrival']) if l['arrival'] != 'BRD' else 0
+            if s['route'] == l['route'] and abs(s_min - l_min) <= 3:
+                too_close = True
+                break
+        if not too_close:
+            filtered_scheduled.append(s)
+    
+    return live + filtered_scheduled
 
 @app.route('/board')
 def board():
@@ -276,6 +293,7 @@ def board():
     if live_1_count < 2:
         all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2 - live_1_count)
 
+    all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return jsonify(all_results[:2])
     
