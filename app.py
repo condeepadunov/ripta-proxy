@@ -175,7 +175,7 @@ def get_scheduled_results(schedule, route_label, current_minutes, count=1):
     results = []
     for arrival_minutes, headsign in schedule:
         minutes_away = arrival_minutes - current_minutes
-        if minutes_away < 0:
+        if minutes_away < 0 or minutes_away > 90:
             continue
         results.append({
             'route': route_label,
