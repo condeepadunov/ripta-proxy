@@ -262,10 +262,12 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
 
 
-try:
-    load_schedule()
-    print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'entries, RT1', len(SCHEDULE_RT1), 'entries')
-except Exception as e:
-    print('Warning: could not load schedule:', e)
-    print('CWD:', os.getcwd())
-    print('Files here:', os.listdir(os.getcwd()))
+@app.before_first_request
+def startup():
+    try:
+        load_schedule()
+        print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'entries, RT1', len(SCHEDULE_RT1), 'entries')
+    except Exception as e:
+        print('Warning: could not load schedule:', e)
+        print('CWD:', os.getcwd())
+        print('Files here:', os.listdir(os.getcwd()))
