@@ -109,6 +109,15 @@ def load_schedule():
                 row['service_id'],
             ))
     SCHEDULE_RT1.sort(key=lambda x: x[0])
+with open(os.path.join(base, 'route11_stop20535.csv')) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
+
+    with open(os.path.join(base, 'route1_stop20280.csv')) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
 
 
 def time_str_to_minutes(t):
@@ -197,7 +206,9 @@ def get_live_results(offset_table, route_label, current_minutes, feed):
             continue
         results.append({
             'route': route_label,
-            'destination': route_label + ' PVD',
+            headsign = TRIP_HEADSIGNS.get(trip_id, '')
+            dest = shorten_destination(headsign) if headsign else 'PVD'
+            'destination': route_label + ' ' + dest,
             'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
             'live': True,
             'urgent': minutes_away <= (10 if route_label == 'R' else 5),
