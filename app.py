@@ -184,11 +184,14 @@ def get_live_results(offset_table, route_label, current_minutes, feed):
         minutes_away = estimated_arrival - current_minutes
         if minutes_away < 0:
             continue
+        if route_label == 'R' and minutes_away <= 6:
+            continue
         results.append({
             'route': route_label,
             'destination': route_label + ' PVD',
             'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
             'live': True,
+            'urgent': minutes_away <= (10 if route_label == 'R' else 5),
         })
     results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return results
@@ -204,11 +207,14 @@ def get_scheduled_results(schedule, route_label, current_minutes, count=1):
         minutes_away = arrival_minutes - current_minutes
         if minutes_away < 0 or minutes_away > 90:
             continue
+        if route_label == 'R' and minutes_away <= 6:
+            continue
         results.append({
             'route': route_label,
             'destination': route_label + ' ' + shorten_destination(headsign),
             'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
             'live': False,
+            'urgent': minutes_away <= (10 if route_label == 'R' else 5),
         })
         if len(results) == count:
             break
