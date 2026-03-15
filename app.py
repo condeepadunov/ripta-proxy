@@ -142,9 +142,9 @@ def shorten_destination(dest):
     if 'BROAD STREET TERMINAL' in dest_upper or 'BROAD ST' in dest_upper:
         return 'Brd St'
     if 'TF GREEN AIRPORT' in dest_upper:
-        return 'TFG'
+        return 'TFGrn'
     if "SHAW'S" in dest_upper:
-        return 'SWW'
+        return 'Shaws'
     
     # General uppercase replacements for everything else
     dest = dest_upper
