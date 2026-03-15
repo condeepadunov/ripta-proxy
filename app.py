@@ -1,14 +1,14 @@
 import csv
 import os
 import requests
+from collections import defaultdict
+from datetime import datetime, timezone, timedelta
 from flask import Flask, jsonify
-from datetime import datetime, timezone
 
 app = Flask(__name__)
 
 RIPTA_URL = 'http://realtime.ripta.com:81/api/tripupdates?format=json'
 
-# Lookup table: trip_id -> minutes from trip start_time to arrival at stop 20535 (Route 11)
 STOP_OFFSET_RT11 = {
     '4422603': 13, '4422604': 13, '4422605': 13, '4422606': 12, '4422607': 12,
     '4422608': 12, '4422609': 13, '4422610': 13, '4422611': 13, '4422612': 13,
@@ -51,7 +51,6 @@ STOP_OFFSET_RT11 = {
     '4574110': 21,
 }
 
-# Lookup table: trip_id -> minutes from trip start_time to arrival at stop 20280 (Route 1)
 STOP_OFFSET_RT1 = {
     '4422942': 8, '4422948': 8, '4422949': 9, '4422958': 9, '4422966': 20,
     '4422967': 20, '4422973': 9, '4422978': 20, '4422979': 20, '4422980': 20,
@@ -74,27 +73,41 @@ STOP_OFFSET_RT1 = {
     '4573846': 9, '4573852': 9,
 }
 
-# Schedules loaded at startup
-SCHEDULE_RT11 = []
+# Loaded at startup
+SCHEDULE_RT11 = []  # (arrival_minutes, headsign, service_id)
 SCHEDULE_RT1 = []
+CALENDAR = {}  # date_str -> set of service_ids
 
 
 def load_schedule():
-    global SCHEDULE_RT11, SCHEDULE_RT1
+    global SCHEDULE_RT11, SCHEDULE_RT1, CALENDAR
     base = os.getcwd()
 
-    csv11 = os.path.join(base, 'route11_stop20535.csv')
-    with open(csv11) as f:
+    cal = defaultdict(set)
+    with open(os.path.join(base, 'calendar_dates.csv')) as f:
         reader = csv.DictReader(f)
         for row in reader:
-            SCHEDULE_RT11.append((time_str_to_minutes(row['arrival_time']), row['headsign']))
+            cal[row['date'].strip()].add(row['service_id'].strip())
+    CALENDAR = dict(cal)
+
+    with open(os.path.join(base, 'route11_stop20535.csv')) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            SCHEDULE_RT11.append((
+                time_str_to_minutes(row['arrival_time']),
+                row['headsign'],
+                row['service_id'],
+            ))
     SCHEDULE_RT11.sort(key=lambda x: x[0])
 
-    csv1 = os.path.join(base, 'route1_stop20280.csv')
-    with open(csv1) as f:
+    with open(os.path.join(base, 'route1_stop20280.csv')) as f:
         reader = csv.DictReader(f)
         for row in reader:
-            SCHEDULE_RT1.append((time_str_to_minutes(row['arrival_time']), row['headsign']))
+            SCHEDULE_RT1.append((
+                time_str_to_minutes(row['arrival_time']),
+                row['headsign'],
+                row['service_id'],
+            ))
     SCHEDULE_RT1.sort(key=lambda x: x[0])
 
 
@@ -103,17 +116,29 @@ def time_str_to_minutes(t):
     return int(parts[0]) * 60 + int(parts[1])
 
 
+def eastern_now():
+    """Return current datetime in Eastern time (UTC-4 EDT)."""
+    return datetime.now(timezone.utc) - timedelta(hours=4)
+
+
 def now_minutes():
-    now = datetime.now(timezone.utc)
-    eastern_minutes = now.hour * 60 + now.minute - 4 * 60  # UTC-4 (EDT)
-    if eastern_minutes < 0:
-        eastern_minutes += 24 * 60
-    return eastern_minutes
+    t = eastern_now()
+    return t.hour * 60 + t.minute
+
+
+def today_date_str():
+    return eastern_now().strftime('%Y%m%d')
+
+
+def active_service_ids():
+    return CALENDAR.get(today_date_str(), set())
 
 
 def shorten_destination(dest):
     dest = dest.upper().strip()
     replacements = [
+        ('TF GREEN AIRPORT VIA WARWICK AVE', 'TFG'),
+        ("SHAW'S (WARWICK)", 'SWW'),
         ('BROAD STREET TERMINAL (PROVIDENCE)', 'PVD'),
         ('PROVIDENCE', 'PVD'),
         ('KENNEDY PLAZA', 'KP'),
@@ -126,8 +151,6 @@ def shorten_destination(dest):
         ('SOUTH ', 'S '),
         ('EAST ', 'E '),
         ('WEST ', 'W '),
-        ('TF GREEN AIRPORT VIA WARWICK AVE', 'TFG'),
-        ("SHAW'S (WARWICK)", 'SWW'),
     ]
     for long, short in replacements:
         dest = dest.replace(long, short)
@@ -172,8 +195,12 @@ def get_live_results(offset_table, route_label, current_minutes, feed):
 
 
 def get_scheduled_results(schedule, route_label, current_minutes, count=1):
+    today_services = active_service_ids()
     results = []
-    for arrival_minutes, headsign in schedule:
+    for arrival_minutes, headsign, service_id in schedule:
+        # Only show trips that run today
+        if service_id not in today_services:
+            continue
         minutes_away = arrival_minutes - current_minutes
         if minutes_away < 0 or minutes_away > 90:
             continue
@@ -222,6 +249,8 @@ def debug():
 
     return jsonify({
         'current_minutes_since_midnight': current_minutes,
+        'today_date': today_date_str(),
+        'active_service_ids': list(active_service_ids()),
         'trips_in_feed': trips,
     })
 
@@ -232,7 +261,6 @@ def board():
     rt11_results = []
     rt1_results = []
 
-    # Fetch live feed once and use for both routes
     try:
         feed = requests.get(RIPTA_URL, timeout=10).json()
         rt11_results = get_live_results(STOP_OFFSET_RT11, 'R', current_minutes, feed)
@@ -240,13 +268,11 @@ def board():
     except Exception:
         pass
 
-    # Fall back to schedule for each route if no live results
     if not rt11_results:
         rt11_results = get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=1)
     if not rt1_results:
         rt1_results = get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=1)
 
-    # Return one result per route, sorted by soonest arrival
     results = []
     if rt11_results:
         results.append(rt11_results[0])
@@ -261,11 +287,12 @@ if __name__ == '__main__':
     load_schedule()
     app.run(host='0.0.0.0', port=10000)
 
+
 with app.app_context():
     try:
         load_schedule()
-        print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'entries, RT1', len(SCHEDULE_RT1), 'entries')
+        print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'RT1', len(SCHEDULE_RT1), 'Calendar dates', len(CALENDAR))
     except Exception as e:
         print('Warning: could not load schedule:', e)
-        print('CWD:', os.getcwd())
-        print('Files here:', os.listdir(os.getcwd()))
+        import traceback
+        traceback.print_exc()
