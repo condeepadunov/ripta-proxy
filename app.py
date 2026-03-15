@@ -77,10 +77,11 @@ STOP_OFFSET_RT1 = {
 SCHEDULE_RT11 = []  # (arrival_minutes, headsign, service_id)
 SCHEDULE_RT1 = []
 CALENDAR = {}  # date_str -> set of service_ids
+TRIP_HEADSIGNS = {}  # trip_id -> headsign
 
 
 def load_schedule():
-    global SCHEDULE_RT11, SCHEDULE_RT1, CALENDAR
+    global SCHEDULE_RT11, SCHEDULE_RT1, CALENDAR, TRIP_HEADSIGNS
     base = os.getcwd()
 
     cal = defaultdict(set)
@@ -98,6 +99,7 @@ def load_schedule():
                 row['headsign'],
                 row['service_id'],
             ))
+            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
     SCHEDULE_RT11.sort(key=lambda x: x[0])
 
     with open(os.path.join(base, 'route1_stop20280.csv')) as f:
@@ -108,16 +110,8 @@ def load_schedule():
                 row['headsign'],
                 row['service_id'],
             ))
+            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
     SCHEDULE_RT1.sort(key=lambda x: x[0])
-    with open(os.path.join(base, 'route11_stop20535.csv')) as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
-
-    with open(os.path.join(base, 'route1_stop20280.csv')) as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            TRIP_HEADSIGNS[row['trip_id']] = row['headsign']
 
 
 def time_str_to_minutes(t):
@@ -126,7 +120,6 @@ def time_str_to_minutes(t):
 
 
 def eastern_now():
-    """Return current datetime in Eastern time (UTC-4 EDT)."""
     return datetime.now(timezone.utc) - timedelta(hours=4)
 
 
@@ -146,16 +139,14 @@ def active_service_ids():
 def shorten_destination(dest):
     dest = dest.strip()
     dest_upper = dest.upper()
-    
-    # Special cases that preserve mixed case
+
     if 'BROAD STREET TERMINAL' in dest_upper or 'BROAD ST' in dest_upper:
         return 'BrdSt'
     if 'TF GREEN AIRPORT' in dest_upper:
         return 'TFGrn'
     if "SHAW'S" in dest_upper:
         return 'Shaws'
-    
-    # General uppercase replacements for everything else
+
     dest = dest_upper
     replacements = [
         ('PROVIDENCE', 'PVD'),
@@ -202,7 +193,7 @@ def get_live_results(offset_table, route_label, current_minutes, feed):
         minutes_away = estimated_arrival - current_minutes
         if minutes_away < 0:
             continue
-if route_label == 'R' and minutes_away <= 6:
+        if route_label == 'R' and minutes_away <= 6:
             continue
         headsign = TRIP_HEADSIGNS.get(trip_id, '')
         dest = shorten_destination(headsign) if headsign else 'PVD'
@@ -213,7 +204,7 @@ if route_label == 'R' and minutes_away <= 6:
             'live': True,
             'urgent': minutes_away <= (10 if route_label == 'R' else 5),
         })
-results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+    results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return results
 
 
@@ -221,7 +212,6 @@ def get_scheduled_results(schedule, route_label, current_minutes, count=1):
     today_services = active_service_ids()
     results = []
     for arrival_minutes, headsign, service_id in schedule:
-        # Only show trips that run today
         if service_id not in today_services:
             continue
         minutes_away = arrival_minutes - current_minutes
@@ -239,6 +229,23 @@ def get_scheduled_results(schedule, route_label, current_minutes, count=1):
         if len(results) == count:
             break
     return results
+
+
+def deduplicate_results(results):
+    live = [r for r in results if r['live']]
+    scheduled = [r for r in results if not r['live']]
+    filtered_scheduled = []
+    for s in scheduled:
+        s_min = int(s['arrival']) if s['arrival'] != 'BRD' else 0
+        too_close = False
+        for l in live:
+            l_min = int(l['arrival']) if l['arrival'] != 'BRD' else 0
+            if s['route'] == l['route'] and abs(s_min - l_min) <= 3:
+                too_close = True
+                break
+        if not too_close:
+            filtered_scheduled.append(s)
+    return live + filtered_scheduled
 
 
 @app.route('/')
@@ -280,23 +287,6 @@ def debug():
         'trips_in_feed': trips,
     })
 
-def deduplicate_results(results):
-    live = [r for r in results if r['live']]
-    scheduled = [r for r in results if not r['live']]
-    
-    filtered_scheduled = []
-    for s in scheduled:
-        s_min = int(s['arrival']) if s['arrival'] != 'BRD' else 0
-        too_close = False
-        for l in live:
-            l_min = int(l['arrival']) if l['arrival'] != 'BRD' else 0
-            if s['route'] == l['route'] and abs(s_min - l_min) <= 3:
-                too_close = True
-                break
-        if not too_close:
-            filtered_scheduled.append(s)
-    
-    return live + filtered_scheduled
 
 @app.route('/board')
 def board():
@@ -310,7 +300,6 @@ def board():
     except Exception:
         pass
 
-    # Fill remaining slots with scheduled buses for each route
     live_r_count = sum(1 for r in all_results if r['route'] == 'R')
     live_1_count = sum(1 for r in all_results if r['route'] == '1')
 
@@ -322,7 +311,8 @@ def board():
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return jsonify(all_results[:3])
-    
+
+
 if __name__ == '__main__':
     load_schedule()
     app.run(host='0.0.0.0', port=10000)
