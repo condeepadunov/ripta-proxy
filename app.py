@@ -202,18 +202,18 @@ def get_live_results(offset_table, route_label, current_minutes, feed):
         minutes_away = estimated_arrival - current_minutes
         if minutes_away < 0:
             continue
-        if route_label == 'R' and minutes_away <= 6:
+if route_label == 'R' and minutes_away <= 6:
             continue
+        headsign = TRIP_HEADSIGNS.get(trip_id, '')
+        dest = shorten_destination(headsign) if headsign else 'PVD'
         results.append({
             'route': route_label,
-            headsign = TRIP_HEADSIGNS.get(trip_id, '')
-            dest = shorten_destination(headsign) if headsign else 'PVD'
             'destination': route_label + ' ' + dest,
             'arrival': str(minutes_away) if minutes_away > 0 else 'BRD',
             'live': True,
             'urgent': minutes_away <= (10 if route_label == 'R' else 5),
         })
-    results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     return results
 
 
