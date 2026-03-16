@@ -320,11 +320,10 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
 
 
-with app.app_context():
-    try:
-        load_schedule()
-        print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'RT1', len(SCHEDULE_RT1), 'Calendar dates', len(CALENDAR))
-    except Exception as e:
-        print('Warning: could not load schedule:', e)
-        import traceback
-        traceback.print_exc()
+try:
+    load_schedule()
+    print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'RT1', len(SCHEDULE_RT1), 'Calendar dates', len(CALENDAR))
+except Exception as e:
+    print('Warning: could not load schedule:', e)
+    import traceback
+    traceback.print_exc()
