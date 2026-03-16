@@ -146,6 +146,8 @@ def shorten_destination(dest):
         return 'TFGrn'
     if "SHAW'S" in dest_upper:
         return 'Shaws'
+    if 'KENNEDY PLAZA' in dest_upper:
+        return 'KenPlz'
 
     dest = dest_upper
     replacements = [
