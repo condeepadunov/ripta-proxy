@@ -146,8 +146,6 @@ def shorten_destination(dest):
         return 'TFGrn'
     if "SHAW'S" in dest_upper:
         return 'Shaws'
-    if 'KENNEDY PLAZA' in dest_upper:
-        return 'KenPlz'
 
     dest = dest_upper
     replacements = [
@@ -290,6 +288,29 @@ def debug():
     })
 
 
+OPEN_METEO_URL = (
+    'https://api.open-meteo.com/v1/forecast'
+    '?latitude=41.8491001&longitude=-71.3969192'
+    '&current=temperature_2m,weather_code'
+    '&daily=precipitation_probability_max,weather_code'
+    '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
+)
+
+
+def fetch_weather():
+    try:
+        data = requests.get(OPEN_METEO_URL, timeout=5).json()
+        temp_f = data['current']['temperature_2m']
+        current_code = data['current']['weather_code']
+        daily_code = data['daily']['weather_code'][0]
+        precip_pct = data['daily']['precipitation_probability_max'][0]
+        snow_codes = set(range(71, 78)) | {85, 86}
+        has_snow = (current_code in snow_codes) or (daily_code in snow_codes)
+        return temp_f, precip_pct, has_snow
+    except Exception:
+        return None, None, False
+
+
 @app.route('/board')
 def board():
     current_minutes = now_minutes()
@@ -312,7 +333,15 @@ def board():
 
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
-    return jsonify(all_results[:3])
+
+    temp_f, precip_pct, has_snow = fetch_weather()
+
+    return jsonify({
+        'buses': all_results[:3],
+        'temp_f': temp_f,
+        'precip_pct': precip_pct,
+        'has_snow': has_snow,
+    })
 
 
 if __name__ == '__main__':
@@ -320,10 +349,11 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
 
 
-try:
-    load_schedule()
-    print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'RT1', len(SCHEDULE_RT1), 'Calendar dates', len(CALENDAR))
-except Exception as e:
-    print('Warning: could not load schedule:', e)
-    import traceback
-    traceback.print_exc()
+with app.app_context():
+    try:
+        load_schedule()
+        print('Schedule loaded: RT11', len(SCHEDULE_RT11), 'RT1', len(SCHEDULE_RT1), 'Calendar dates', len(CALENDAR))
+    except Exception as e:
+        print('Warning: could not load schedule:', e)
+        import traceback
+        traceback.print_exc()
