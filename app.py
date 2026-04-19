@@ -291,7 +291,7 @@ def debug():
 OPEN_METEO_URL = (
     'https://api.open-meteo.com/v1/forecast'
     '?latitude=41.8491001&longitude=-71.3969192'
-    '&current=temperature_2m,weather_code'
+    '&current=temperature_2m'
     '&daily=precipitation_probability_max,weather_code'
     '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
 )
@@ -299,21 +299,16 @@ OPEN_METEO_URL = (
 
 def fetch_weather():
     try:
-        resp = requests.get(OPEN_METEO_URL, timeout=5)
-        print('Open-Meteo status:', resp.status_code)
-        data = resp.json()
-        print('Open-Meteo response keys:', list(data.keys()))
+        data = requests.get(OPEN_METEO_URL, timeout=5).json()
         temp_f = data['current']['temperature_2m']
-        current_code = data['current']['weather_code']
         daily_code = data['daily']['weather_code'][0]
         precip_pct = data['daily']['precipitation_probability_max'][0]
         snow_codes = set(range(71, 78)) | {85, 86}
-        has_snow = (current_code in snow_codes) or (daily_code in snow_codes)
+        has_snow = daily_code in snow_codes
         return temp_f, precip_pct, has_snow
     except Exception as e:
         print('fetch_weather error:', e)
         return None, None, False
-
 
 @app.route('/board')
 def board():
