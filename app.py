@@ -299,7 +299,10 @@ OPEN_METEO_URL = (
 
 def fetch_weather():
     try:
-        data = requests.get(OPEN_METEO_URL, timeout=5).json()
+        resp = requests.get(OPEN_METEO_URL, timeout=5)
+        print('Open-Meteo status:', resp.status_code)
+        data = resp.json()
+        print('Open-Meteo response keys:', list(data.keys()))
         temp_f = data['current']['temperature_2m']
         current_code = data['current']['weather_code']
         daily_code = data['daily']['weather_code'][0]
@@ -307,7 +310,8 @@ def fetch_weather():
         snow_codes = set(range(71, 78)) | {85, 86}
         has_snow = (current_code in snow_codes) or (daily_code in snow_codes)
         return temp_f, precip_pct, has_snow
-    except Exception:
+    except Exception as e:
+        print('fetch_weather error:', e)
         return None, None, False
 
 
