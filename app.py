@@ -312,7 +312,12 @@ def fetch_weather():
         return temp_f, precip_pct, has_snow
     except Exception as e:
         print('fetch_weather error:', e)
+        try:
+            print('fetch_weather raw response:', requests.get(OPEN_METEO_URL, timeout=5).text[:200])
+        except Exception as e2:
+            print('fetch_weather raw error:', e2)
         return None, None, False
+
 
 @app.route('/board')
 def board():
