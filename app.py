@@ -291,7 +291,7 @@ def debug():
 OPEN_METEO_URL = (
     'https://api.open-meteo.com/v1/forecast'
     '?latitude=41.8491001&longitude=-71.3969192'
-    '&current=temperature_2m'
+    '&hourly=temperature_2m'
     '&daily=precipitation_probability_max,weather_code'
     '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
 )
@@ -300,7 +300,11 @@ OPEN_METEO_URL = (
 def fetch_weather():
     try:
         data = requests.get(OPEN_METEO_URL, timeout=5).json()
-        temp_f = data['current']['temperature_2m']
+        # Get current hour index from the hourly time list
+        from datetime import datetime, timezone, timedelta
+        now = datetime.now(timezone.utc) - timedelta(hours=4)
+        current_hour = now.hour
+        temp_f = data['hourly']['temperature_2m'][current_hour]
         daily_code = data['daily']['weather_code'][0]
         precip_pct = data['daily']['precipitation_probability_max'][0]
         snow_codes = set(range(71, 78)) | {85, 86}
