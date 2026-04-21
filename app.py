@@ -299,7 +299,7 @@ OPEN_METEO_URL = (
 )
 
 _weather_cache = {'temp_f': None, 'precip_pct': None, 'has_snow': False, 'ts': 0}
-WEATHER_CACHE_SECONDS = 300  # refresh every 5 minutes
+WEATHER_CACHE_SECONDS = 900  # refresh every 15 minutes
 
 
 def fetch_weather():
