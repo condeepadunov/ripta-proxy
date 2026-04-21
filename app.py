@@ -247,10 +247,29 @@ def deduplicate_results(results):
             filtered_scheduled.append(s)
     return live + filtered_scheduled
 
-
 @app.route('/')
 @app.route('/ping')
 def ping():
+    # Refresh weather cache on ping so /board never calls Open-Meteo directly
+    global _weather_cache
+    try:
+        data = requests.get(OPEN_METEO_URL, timeout=5).json()
+        if not data.get('error'):
+            from datetime import datetime, timezone, timedelta
+            temp_f = data['current']['temperature_2m']
+            daily_code = data['daily']['weather_code'][0]
+            precip_pct = data['daily']['precipitation_probability_max'][0]
+            snow_codes = set(range(71, 78)) | {85, 86}
+            has_snow = daily_code in snow_codes
+            _weather_cache = {
+                'temp_f': temp_f,
+                'precip_pct': precip_pct,
+                'has_snow': has_snow,
+                'ts': _time.time(),
+            }
+            print('Weather updated via ping: temp=%s' % temp_f)
+    except Exception as e:
+        print('ping weather error:', e)
     return 'ok', 200
 
 
@@ -303,30 +322,7 @@ WEATHER_CACHE_SECONDS = 900  # refresh every 15 minutes
 
 
 def fetch_weather():
-    global _weather_cache
-    if _time.time() - _weather_cache['ts'] < WEATHER_CACHE_SECONDS:
-        return _weather_cache['temp_f'], _weather_cache['precip_pct'], _weather_cache['has_snow']
-    try:
-        data = requests.get(OPEN_METEO_URL, timeout=5).json()
-        if data.get('error'):
-            print('Open-Meteo error:', data.get('reason'))
-            return _weather_cache['temp_f'], _weather_cache['precip_pct'], _weather_cache['has_snow']
-        temp_f = data['current']['temperature_2m']
-        daily_code = data['daily']['weather_code'][0]
-        precip_pct = data['daily']['precipitation_probability_max'][0]
-        snow_codes = set(range(71, 78)) | {85, 86}
-        has_snow = daily_code in snow_codes
-        _weather_cache = {
-            'temp_f': temp_f,
-            'precip_pct': precip_pct,
-            'has_snow': has_snow,
-            'ts': _time.time(),
-        }
-        print('Weather updated: temp=%s precip=%s snow=%s' % (temp_f, precip_pct, has_snow))
-        return temp_f, precip_pct, has_snow
-    except Exception as e:
-        print('fetch_weather error:', e)
-        return _weather_cache['temp_f'], _weather_cache['precip_pct'], _weather_cache['has_snow']
+    return _weather_cache['temp_f'], _weather_cache['precip_pct'], _weather_cache['has_snow']
 
 
 
