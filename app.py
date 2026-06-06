@@ -375,6 +375,64 @@ def board():
     })
 
 
+MINI_WALK_TIMES = {'R': 6, '1': 2}
+
+
+def apply_walk_time(results, walk_times):
+    """Subtract walk time from each result's arrival, skip if departure <= 0."""
+    adjusted = []
+    for r in results:
+        if r['arrival'] == 'BRD':
+            continue
+        arrival_min = int(r['arrival'])
+        walk = walk_times.get(r['route'], 0)
+        departure = arrival_min - walk
+        if departure <= 0:
+            continue
+        adjusted.append({
+            'route': r['route'],
+            'departure': str(departure),
+            'live': r['live'],
+            'urgent': departure <= 5,
+        })
+    return adjusted
+
+
+@app.route('/mini')
+def mini():
+    current_minutes = now_minutes()
+    all_results = []
+
+    try:
+        feed = requests.get(RIPTA_URL, timeout=10).json()
+        all_results += get_live_results(STOP_OFFSET_RT11, 'R', current_minutes, feed)
+        all_results += get_live_results(STOP_OFFSET_RT1, '1', current_minutes, feed)
+    except Exception:
+        pass
+
+    live_r_count = sum(1 for r in all_results if r['route'] == 'R')
+    live_1_count = sum(1 for r in all_results if r['route'] == '1')
+
+    if live_r_count < 2:
+        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=2 - live_r_count)
+    if live_1_count < 2:
+        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2 - live_1_count)
+
+    all_results = deduplicate_results(all_results)
+    all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
+    all_results = apply_walk_time(all_results, MINI_WALK_TIMES)
+
+    # One result per route: take the first valid departure for each
+    seen_routes = set()
+    final = []
+    for r in all_results:
+        if r['route'] not in seen_routes:
+            final.append(r)
+            seen_routes.add(r['route'])
+
+    return jsonify({'buses': final})
+
+
 if __name__ == '__main__':
     load_schedule()
     app.run(host='0.0.0.0', port=10000)
