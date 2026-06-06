@@ -1,5 +1,6 @@
 import csv
 import os
+import time as _time
 import requests
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
@@ -8,6 +9,32 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 RIPTA_URL = 'http://realtime.ripta.com:81/api/tripupdates?format=json'
+
+OPEN_METEO_URL = (
+    'https://api.open-meteo.com/v1/forecast'
+    '?latitude=41.8491001&longitude=-71.3969192'
+    '&current=temperature_2m'
+    '&hourly=precipitation_probability'
+    '&daily=precipitation_probability_max,weather_code'
+    '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
+)
+
+_weather_cache = {
+    'temp_f': None,
+    'precip_pct_now': None,
+    'precip_pct_later': None,
+    'has_snow': False,
+}
+
+
+def fetch_weather():
+    return (
+        _weather_cache['temp_f'],
+        _weather_cache['precip_pct_now'],
+        _weather_cache['precip_pct_later'],
+        _weather_cache['has_snow'],
+    )
+
 
 STOP_OFFSET_RT11 = {
     '4422603': 13, '4422604': 13, '4422605': 13, '4422606': 12, '4422607': 12,
@@ -73,11 +100,10 @@ STOP_OFFSET_RT1 = {
     '4573846': 9, '4573852': 9,
 }
 
-# Loaded at startup
-SCHEDULE_RT11 = []  # (arrival_minutes, headsign, service_id)
+SCHEDULE_RT11 = []
 SCHEDULE_RT1 = []
-CALENDAR = {}  # date_str -> set of service_ids
-TRIP_HEADSIGNS = {}  # trip_id -> headsign
+CALENDAR = {}
+TRIP_HEADSIGNS = {}
 
 
 def load_schedule():
@@ -247,27 +273,35 @@ def deduplicate_results(results):
             filtered_scheduled.append(s)
     return live + filtered_scheduled
 
+
 @app.route('/')
 @app.route('/ping')
 def ping():
-    # Refresh weather cache on ping so /board never calls Open-Meteo directly
     global _weather_cache
     try:
         data = requests.get(OPEN_METEO_URL, timeout=5).json()
         if not data.get('error'):
-            from datetime import datetime, timezone, timedelta
             temp_f = data['current']['temperature_2m']
             daily_code = data['daily']['weather_code'][0]
-            precip_pct = data['daily']['precipitation_probability_max'][0]
+            precip_pct_later = data['daily']['precipitation_probability_max'][0]
             snow_codes = set(range(71, 78)) | {85, 86}
             has_snow = daily_code in snow_codes
+
+            # Next 3 hours precipitation probability
+            now = eastern_now()
+            current_hour = now.hour
+            hourly_precip = data['hourly']['precipitation_probability']
+            next_3 = hourly_precip[current_hour:current_hour + 3]
+            precip_pct_now = max(next_3) if next_3 else None
+
             _weather_cache = {
                 'temp_f': temp_f,
-                'precip_pct': precip_pct,
+                'precip_pct_now': precip_pct_now,
+                'precip_pct_later': precip_pct_later,
                 'has_snow': has_snow,
-                'ts': _time.time(),
             }
-            print('Weather updated via ping: temp=%s' % temp_f)
+            print('Weather updated: temp=%s now=%s later=%s snow=%s' % (
+                temp_f, precip_pct_now, precip_pct_later, has_snow))
     except Exception as e:
         print('ping weather error:', e)
     return 'ok', 200
@@ -307,25 +341,6 @@ def debug():
     })
 
 
-import time as _time
-
-OPEN_METEO_URL = (
-    'https://api.open-meteo.com/v1/forecast'
-    '?latitude=41.8491001&longitude=-71.3969192'
-    '&current=temperature_2m'
-    '&daily=precipitation_probability_max,weather_code'
-    '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
-)
-
-_weather_cache = {'temp_f': None, 'precip_pct': None, 'has_snow': False, 'ts': 0}
-WEATHER_CACHE_SECONDS = 900  # refresh every 15 minutes
-
-
-def fetch_weather():
-    return _weather_cache['temp_f'], _weather_cache['precip_pct'], _weather_cache['has_snow']
-
-
-
 @app.route('/board')
 def board():
     current_minutes = now_minutes()
@@ -349,12 +364,13 @@ def board():
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
 
-    temp_f, precip_pct, has_snow = fetch_weather()
+    temp_f, precip_pct_now, precip_pct_later, has_snow = fetch_weather()
 
     return jsonify({
         'buses': all_results[:3],
         'temp_f': temp_f,
-        'precip_pct': precip_pct,
+        'precip_pct_now': precip_pct_now,
+        'precip_pct_later': precip_pct_later,
         'has_snow': has_snow,
     })
 
