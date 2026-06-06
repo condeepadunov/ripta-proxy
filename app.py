@@ -413,21 +413,21 @@ def mini():
     live_r_count = sum(1 for r in all_results if r['route'] == 'R')
     live_1_count = sum(1 for r in all_results if r['route'] == '1')
 
-    if live_r_count < 3:
-        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=3 - live_r_count)
-    if live_1_count < 3:
-        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=3 - live_1_count)
+    if live_r_count < 4:
+        all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=4 - live_r_count)
+    if live_1_count < 4:
+        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=4 - live_1_count)
 
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     all_results = apply_walk_time(all_results, MINI_WALK_TIMES)
 
-    # Up to three results per route
+    # Up to four results per route
     route_counts = {}
     final = []
     for r in all_results:
         count = route_counts.get(r['route'], 0)
-        if count < 3:
+        if count < 4:
             final.append(r)
             route_counts[r['route']] = count + 1
 
