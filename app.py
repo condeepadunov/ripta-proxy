@@ -415,15 +415,15 @@ def mini():
 
     if live_r_count < 5:
         all_results += get_scheduled_results(SCHEDULE_RT11, 'R', current_minutes, count=5 - live_r_count)
-    if live_1_count < 3:
-        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=3 - live_1_count)
+    if live_1_count < 2:
+        all_results += get_scheduled_results(SCHEDULE_RT1, '1', current_minutes, count=2 - live_1_count)
 
     all_results = deduplicate_results(all_results)
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     all_results = apply_walk_time(all_results, MINI_WALK_TIMES)
 
-    # R: up to 5, 1: up to 3
-    route_limits = {'R': 5, '1': 3}
+    # R: up to 5, 1: up to 2
+    route_limits = {'R': 5, '1': 2}
     route_counts = {}
     final = []
     for r in all_results:
