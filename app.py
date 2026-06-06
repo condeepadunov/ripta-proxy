@@ -422,13 +422,14 @@ def mini():
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     all_results = apply_walk_time(all_results, MINI_WALK_TIMES)
 
-    # One result per route: take the first valid departure for each
-    seen_routes = set()
+    # Up to two results per route
+    route_counts = {}
     final = []
     for r in all_results:
-        if r['route'] not in seen_routes:
+        count = route_counts.get(r['route'], 0)
+        if count < 2:
             final.append(r)
-            seen_routes.add(r['route'])
+            route_counts[r['route']] = count + 1
 
     return jsonify({'buses': final})
 
