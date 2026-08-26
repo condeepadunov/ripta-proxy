@@ -279,20 +279,19 @@ def ping():
     global _weather_cache
     try:
         data = requests.get(OPEN_METEO_URL, timeout=5).json()
+        print('ping raw temp:', data.get('current', {}).get('temperature_2m'))
+        print('ping error field:', data.get('error'))
         if not data.get('error'):
             temp_f = data['current']['temperature_2m']
             daily_code = data['daily']['weather_code'][0]
             precip_pct_later = data['daily']['precipitation_probability_max'][0]
             snow_codes = set(range(71, 78)) | {85, 86}
             has_snow = daily_code in snow_codes
-
-            # Next 3 hours precipitation probability
             now = eastern_now()
             current_hour = now.hour
             hourly_precip = data['hourly']['precipitation_probability']
             next_3 = hourly_precip[current_hour:current_hour + 3]
             precip_pct_now = max(next_3) if next_3 else None
-
             _weather_cache = {
                 'temp_f': temp_f,
                 'precip_pct_now': precip_pct_now,
