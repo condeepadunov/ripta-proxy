@@ -274,13 +274,15 @@ def deduplicate_results(results):
 
 
 @app.route('/')
+def health():
+    return 'ok', 200
+
+
 @app.route('/ping')
 def ping():
     global _weather_cache
     try:
         data = requests.get(OPEN_METEO_URL, timeout=5).json()
-        print('ping raw temp:', data.get('current', {}).get('temperature_2m'))
-        print('ping error field:', data.get('error'))
         if not data.get('error'):
             temp_f = data['current']['temperature_2m']
             daily_code = data['daily']['weather_code'][0]
@@ -300,6 +302,8 @@ def ping():
             }
             print('Weather updated: temp=%s now=%s later=%s snow=%s' % (
                 temp_f, precip_pct_now, precip_pct_later, has_snow))
+        else:
+            print('Open-Meteo error:', data.get('reason'))
     except Exception as e:
         print('ping weather error:', e)
     return 'ok', 200
@@ -377,7 +381,6 @@ MINI_WALK_TIMES = {'R': 6, '1': 2}
 
 
 def apply_walk_time(results, walk_times):
-    """Subtract walk time from each result's arrival, skip if departure <= 0."""
     adjusted = []
     for r in results:
         if r['arrival'] == 'BRD':
@@ -420,7 +423,6 @@ def mini():
     all_results.sort(key=lambda r: int(r['arrival']) if r['arrival'] != 'BRD' else 0)
     all_results = apply_walk_time(all_results, MINI_WALK_TIMES)
 
-    # R: up to 5, 1: up to 2
     route_limits = {'R': 5, '1': 2}
     route_counts = {}
     final = []
