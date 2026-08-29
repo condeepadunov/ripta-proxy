@@ -1,91 +1,93 @@
 trip_id,arrival_time,headsign,service_id
-4773563,05:58:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4772250,06:17:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4773524,06:38:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4772926,06:56:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4777323,07:01:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4778922,07:06:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4772642,07:15:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4771962,07:34:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4777316,07:41:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4778917,07:42:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773567,07:55:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4771252,08:14:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4777338,08:24:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4778914,08:26:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4773531,08:35:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4772174,08:54:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4777306,09:06:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4778908,09:07:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773492,09:14:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4772928,09:34:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778904,09:43:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4777376,09:50:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4772648,09:54:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4771964,10:14:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778899,10:27:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4777332,10:32:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4773573,10:34:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4771254,10:54:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778896,11:06:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4773537,11:14:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777371,11:14:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4772176,11:34:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778891,11:45:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773498,11:54:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777369,11:57:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4772930,12:14:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778890,12:26:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4772654,12:34:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777368,12:38:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4771966,12:54:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778882,13:07:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773579,13:14:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777333,13:21:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4771256,13:34:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778880,13:43:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4773543,13:54:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777363,14:02:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4772178,14:14:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778869,14:27:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773504,14:34:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777357,14:45:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4772932,14:53:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778874,15:05:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4772660,15:13:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777350,15:25:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4771968,15:33:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778854,15:46:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773585,15:53:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777310,16:08:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4771258,16:13:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778863,16:25:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4773549,16:33:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777348,16:49:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4772180,16:53:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778845,17:06:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773510,17:13:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777358,17:31:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4772934,17:33:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778875,17:45:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4772666,17:54:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777346,18:15:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4771970,18:16:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4778838,18:25:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773591,18:36:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4771260,18:57:00,Shaw's (Warwick),hjun2601-Weekday-3-JU2026-1111100
-4777334,18:58:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4778862,19:06:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4773555,19:17:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777344,19:40:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4778844,19:42:00,TF Green Airport via Warwick Ave,hjun2607-Sunday-1-JU2026-0000001
-4773516,19:57:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777359,20:21:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4778876,20:26:00,Shaw's (Warwick),hjun2607-Sunday-1-JU2026-0000001
-4772672,20:37:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777342,21:04:00,Shaw's (Warwick),hjun2606-Saturday-2-JU2026-0000010
-4773597,21:17:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4777320,21:45:00,TF Green Airport via Warwick Ave,hjun2606-Saturday-2-JU2026-0000010
-4773561,21:57:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4773522,22:37:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
-4772678,23:17:00,TF Green Airport via Warwick Ave,hjun2601-Weekday-3-JU2026-1111100
+4910087,05:58:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4908676,06:17:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4910048,06:38:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4909382,06:56:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4886445,07:01:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4902459,07:06:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4907954,07:08:00,Kennedy Plaza then Central/Classical HS,hsep2601-Weekday-27-SE2026-1111100
+4909076,07:15:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4908380,07:34:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4886438,07:41:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4902454,07:42:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910091,07:55:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4906851,08:14:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4886460,08:24:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4902451,08:26:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4910055,08:35:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4908596,08:54:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4886428,09:06:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4902445,09:07:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910016,09:14:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4909384,09:34:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902441,09:43:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4886498,09:50:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4909082,09:54:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4908382,10:14:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902436,10:27:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4886454,10:32:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4910097,10:34:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4906853,10:54:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902433,11:06:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4886493,11:14:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4910061,11:14:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4908598,11:34:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902428,11:45:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910022,11:54:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886491,11:57:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4909386,12:14:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902427,12:26:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4909088,12:34:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886490,12:38:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4908384,12:54:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902419,13:07:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910103,13:14:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886455,13:21:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4906855,13:34:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902417,13:43:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4910067,13:54:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886485,14:02:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4908600,14:14:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902406,14:27:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910028,14:34:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886479,14:45:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4909388,14:53:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4907835,14:57:00,Hope & Chace,hsep2601-Weekday-27-SE2026-1111100
+4902411,15:05:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4909094,15:13:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886472,15:25:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4908386,15:33:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902391,15:46:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910109,15:53:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886432,16:08:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4906857,16:13:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902400,16:25:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4910073,16:33:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886470,16:49:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4908602,16:53:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902382,17:06:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910034,17:13:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886480,17:31:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4909390,17:33:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902412,17:45:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4909100,18:01:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886468,18:15:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4908388,18:16:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902375,18:25:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910115,18:36:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886456,18:58:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4906859,19:03:00,Shaw's (Warwick),hsep2601-Weekday-27-SE2026-1111100
+4902399,19:06:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4910079,19:17:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886466,19:40:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4902381,19:42:00,TF Green Airport via Warwick Ave,hsep2607-Sunday-27-SE2026-0000001
+4910040,19:57:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886481,20:21:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4902413,20:26:00,Shaw's (Warwick),hsep2607-Sunday-27-SE2026-0000001
+4909106,20:37:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886464,21:04:00,Shaw's (Warwick),hsep2606-Saturday-25-SE2026-0000010
+4910121,21:17:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4886442,21:45:00,TF Green Airport via Warwick Ave,hsep2606-Saturday-25-SE2026-0000010
+4910085,21:57:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4910046,22:37:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
+4909112,23:17:00,TF Green Airport via Warwick Ave,hsep2601-Weekday-27-SE2026-1111100
