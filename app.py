@@ -10,13 +10,10 @@ app = Flask(__name__)
 
 RIPTA_URL = 'http://realtime.ripta.com:81/api/tripupdates?format=json'
 
-OPEN_METEO_URL = (
-    'https://api.open-meteo.com/v1/forecast'
-    '?latitude=41.8491001&longitude=-71.3969192'
-    '&current=temperature_2m'
-    '&hourly=precipitation_probability'
-    '&daily=precipitation_probability_max,weather_code'
-    '&temperature_unit=fahrenheit&forecast_days=1&timezone=America%2FNew_York'
+WEATHERAPI_URL = (
+    'http://api.weatherapi.com/v1/forecast.json'
+    '?key=341dd973faff4befb4625011260509'
+    '&q=41.8491001,-71.3969192&days=1&aqi=no&alerts=no'
 )
 
 _weather_cache = {
@@ -281,18 +278,26 @@ def health():
 def ping():
     global _weather_cache
     try:
-        data = requests.get(OPEN_METEO_URL, timeout=5).json()
-        if not data.get('error'):
-            temp_f = data['current']['temperature_2m']
-            daily_code = data['daily']['weather_code'][0]
-            precip_pct_later = data['daily']['precipitation_probability_max'][0]
-            snow_codes = set(range(71, 78)) | {85, 86}
-            has_snow = daily_code in snow_codes
+        data = requests.get(WEATHERAPI_URL, timeout=5).json()
+        if 'error' not in data:
+            temp_f = data['current']['temp_f']
+            condition_code = data['current']['condition']['code']
+            # WeatherAPI snow condition codes
+            snow_codes = {1114, 1117, 1210, 1213, 1216, 1219, 1222, 1225,
+                          1255, 1258, 1279, 1282}
+            has_snow = condition_code in snow_codes
+
+            # Hourly precip probability for next 3 hours
             now = eastern_now()
             current_hour = now.hour
-            hourly_precip = data['hourly']['precipitation_probability']
-            next_3 = hourly_precip[current_hour:current_hour + 3]
-            precip_pct_now = max(next_3) if next_3 else None
+            hourly = data['forecast']['forecastday'][0]['hour']
+            next_3 = [h['chance_of_rain'] for h in hourly
+                      if int(h['time'].split(' ')[1].split(':')[0]) >= current_hour][:3]
+            precip_pct_now = max(next_3) if next_3 else 0
+
+            # Daily max precip probability
+            precip_pct_later = data['forecast']['forecastday'][0]['day']['daily_chance_of_rain']
+
             _weather_cache = {
                 'temp_f': temp_f,
                 'precip_pct_now': precip_pct_now,
@@ -302,7 +307,7 @@ def ping():
             print('Weather updated: temp=%s now=%s later=%s snow=%s' % (
                 temp_f, precip_pct_now, precip_pct_later, has_snow))
         else:
-            print('Open-Meteo error:', data.get('reason'))
+            print('WeatherAPI error:', data.get('error', {}).get('message'))
     except Exception as e:
         print('ping weather error:', e)
     return 'ok', 200
